@@ -126,6 +126,81 @@ std::vector<Vertex<double>> random_points_in_C(double large, double thick, int n
     return points;
 }
 
+std::vector<Vertex<double>> random_points_in_C_plus_plus(double large, double thick, int n) {
+    std::vector<Vertex<double>> points;
+    points.reserve(n + 10 + 12 + 12);  // Reservar espacio para la C y el '+'
+
+
+    // Límite de coordenadas para los signos '+'
+    double sign_thickness = thick;
+    double distance = large + large/4;
+
+    points.push_back(Vertex<double>(large / 2 - distance,  large / 2));  // Vértice superior derecho
+    points.push_back(Vertex<double>(large / 2 - distance,  (large / 2 - thick)));  // Vértice superior derecho
+    points.push_back(Vertex<double>((-large / 2 + thick) - distance,  (large / 2 - thick)));  // Vértice superior izquierdo
+    points.push_back(Vertex<double>((-large / 2 + thick) - distance,  (-large / 2 + thick)));  // Vértice inferior izquierdo
+    points.push_back(Vertex<double>(large / 2 - distance,  (-large / 2 + thick)));  // Vértice inferior derecho
+    points.push_back(Vertex<double>( large / 2 - distance, -large / 2));  // Vértice inferior derecho
+    points.push_back(Vertex<double>(-large / 2 - distance + thick/2, -large / 2));  // Vértice inferior izquierdo
+    points.push_back(Vertex<double>(-large / 2 - distance , -large / 2 + thick/2));  // Vértice inferior izquierdo
+    points.push_back(Vertex<double>(-large / 2 - distance,  large / 2 - thick/2));  // Vértice superior izquierdo
+    points.push_back(Vertex<double>(-large / 2 - distance + thick,  large / 2));  // Vértice superior derecho
+
+    
+
+    points.push_back(Vertex<double>(sign_thickness/2, large / 2));
+    points.push_back(Vertex<double>(sign_thickness/2, sign_thickness/2));
+    points.push_back(Vertex<double>(large / 2, sign_thickness/2));
+    points.push_back(Vertex<double>(large / 2, -sign_thickness/2));
+    points.push_back(Vertex<double>(sign_thickness/2, -sign_thickness/2));
+    points.push_back(Vertex<double>(sign_thickness/2, -large / 2));
+    points.push_back(Vertex<double>(-sign_thickness/2, -large / 2));
+    points.push_back(Vertex<double>(-sign_thickness/2, -sign_thickness/2));
+    points.push_back(Vertex<double>(-large / 2, -sign_thickness/2));
+    points.push_back(Vertex<double>(-large / 2, sign_thickness/2));
+    points.push_back(Vertex<double>(-sign_thickness/2, sign_thickness/2));
+    points.push_back(Vertex<double>(-sign_thickness/2, large / 2));
+
+    // Vértices para el primer '+' (horizontal y vertical)
+    points.push_back(Vertex<double>(sign_thickness/2 + distance, large / 2));
+    points.push_back(Vertex<double>(sign_thickness/2 + distance, sign_thickness/2));
+    points.push_back(Vertex<double>(large / 2 + distance, sign_thickness/2));
+    points.push_back(Vertex<double>(large / 2 + distance, -sign_thickness/2));
+    points.push_back(Vertex<double>(sign_thickness/2 + distance, -sign_thickness/2));
+    points.push_back(Vertex<double>(sign_thickness/2 + distance, -large / 2));
+    points.push_back(Vertex<double>(-sign_thickness/2 + distance, -large / 2));
+    points.push_back(Vertex<double>(-sign_thickness/2 + distance, -sign_thickness/2));
+    points.push_back(Vertex<double>(-large / 2 + distance, -sign_thickness/2));
+    points.push_back(Vertex<double>(-large / 2 + distance, sign_thickness/2));
+    points.push_back(Vertex<double>(-sign_thickness/2 + distance, sign_thickness/2));
+    points.push_back(Vertex<double>(-sign_thickness/2 + distance, large / 2));
+    
+
+    // Semilla aleatoria basada en el tiempo
+    srand(static_cast<unsigned int>(time(NULL)));
+    double radius = large * 3;
+
+    // Generar n puntos aleatorios dentro del cuadrilátero
+    for (int i = 0; i < n; ++i) {
+        // Generar un ángulo aleatorio entre 0 y 2π
+        double angle = ((double)rand() / RAND_MAX) * 2 * M_PI;
+        
+        // Generar una distancia aleatoria desde el centro hasta el borde del círculo
+        // Para que la distribución sea uniforme en el área, usamos la raíz cuadrada
+        double distance = radius * sqrt((double)rand() / RAND_MAX);
+        
+        // Convertir de coordenadas polares a cartesianas
+        double x = distance * cos(angle);
+        double y = distance * sin(angle);
+
+        // Añadir el punto a la lista
+        points.push_back(Vertex<double>(x, y));
+    }
+
+    return points;
+}
+
+
 std::vector<Vertex<double>> random_points_in_quadrilateral_with_line(double width, double height, int n) {
     std::vector<Vertex<double>> points;
     points.reserve(n + 4);  // Incluir espacio para vértices
@@ -538,29 +613,44 @@ void consecutive_constrained_edges(DelaunayTriangulation<double> &dt, int n, int
 
 int main() {
     DelaunayTriangulation<double> dt;
-    int number_of_points = 100;
+    int number_of_points = 200;
     int num_points_per_side = 6;  // Grilla de 10x10 puntos
     double spacing = 1.0;  // Distancia entre puntos vecinos
 
     //std::vector<Vertex<double>> grid = grid_points(num_points_per_side, spacing);
     //std::vector<Vertex<double>> points = random_points(number_of_points, 10);
     //std::vector<Vertex<double>> points = random_points_in_quadrilateral(20, 10, number_of_points/2);
-    std::vector<Vertex<double>> points = random_points_in_quadrilateral_with_line(20, 10, number_of_points/2);
+    //std::vector<Vertex<double>> points = random_points_in_quadrilateral_with_line(20, 10, number_of_points/2);
     //std::vector<Vertex<double>> points2 = random_points(20, 30);
-    //std::vector<Vertex<double>> points = random_points_in_C(20, 3, number_of_points);
+    std::vector<Vertex<double>> points = random_points_in_C_plus_plus(20, 3, number_of_points);
     //std::vector<Vertex<double>> points = random_points_in_triangle(20, number_of_points);
-    Edge<double> e1 = Edge<double>(&points[0], &points[1]);
-    Edge<double> e2 = Edge<double>(&points[1], &points[2]);
-    Edge<double> e3 = Edge<double>(&points[2], &points[3]);
-    Edge<double> e4 = Edge<double>(&points[3], &points[0]);
-
+    
     
 
     std::vector<Edge<double>> edges;
-    edges.push_back(e1);
-    edges.push_back(e2);
-    edges.push_back(e3);
-    edges.push_back(e4);
+    for(int i = 0; i < 10; i++){
+        Vertex<double> *v1 = &points[i];
+        Vertex<double> *v2 = &points[(i + 1) % 10];
+        edges.push_back(Edge<double>(v1, v2));
+    }
+
+    for(int i = 0; i < 12; i++){
+        Vertex<double> *v1 = &points[i + 10];
+        Vertex<double> *v2 = &points[(i + 1) % 12 + 10];
+        edges.push_back(Edge<double>(v1, v2));
+    }
+
+    for(int i = 0; i < 12; i++){
+        Vertex<double> *v1 = &points[i + 22];
+        Vertex<double> *v2 = &points[(i + 1) % 12 + 22];
+        edges.push_back(Edge<double>(v1, v2));
+    }
+
+    
+
+    
+
+
 
     std::vector<Vertex<double>> all_points = points;
     //all_points.insert(all_points.end(), points2.begin(), points2.end());
