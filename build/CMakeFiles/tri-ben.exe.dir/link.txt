@@ -1,0 +1,1 @@
+/usr/bin/c++  -Wextra -g -O3 CMakeFiles/tri-ben.exe.dir/src/main.cpp.o -o tri-ben.exe  -lsfml-graphics -lsfml-window -lsfml-system 

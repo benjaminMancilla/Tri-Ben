@@ -1,0 +1,3 @@
+/home/benjamin/Desktop/Tri-Ben/build/CMakeFiles/tri-ben.exe.dir
+/home/benjamin/Desktop/Tri-Ben/build/CMakeFiles/edit_cache.dir
+/home/benjamin/Desktop/Tri-Ben/build/CMakeFiles/rebuild_cache.dir
